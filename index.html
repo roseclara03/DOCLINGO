@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Translator</title>
+    <style>
+        /* CSS Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://e0.pxfuel.com/wallpapers/215/344/desktop-wallpaper-beige-geometric-modern-stylish-abstract-triangle-background-wall-modern-for-living-room-i-in-from-yiwu-5-81-abstract-cream.jpg');
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+            color: #333;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        select, input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        .result-section {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        a {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>DocLingo</h1>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <label for="source_language">Source Language:</label>
+        <select name="source_language" id="source_language">
+            {% for code, name in languages.items() %}
+                <option value="{{ code }}">{{ name }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="target_language">Target Language:</label>
+        <select name="target_language" id="target_language">
+            {% for code, name in languages.items() %}
+                <option value="{{ code }}">{{ name }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="input_pdf">Upload PDF:</label>
+        <input type="file" name="input_pdf" id="input_pdf" accept=".pdf"><br><br>
+
+        <button type="submit" name="submit_translated_pdf">Translate PDF</button>
+        <button type="submit" name="submit_translated_summary">Translate and Summarize</button>
+    </form>
+
+    <div class="result-section">
+        {% if translated_pdf_path %}
+            <h2>Translated PDF:</h2>
+            <a href="{{ translated_pdf_path }}" download>Download Translated PDF</a><br><br>
+        {% endif %}
+
+        {% if translated_audio_path %}
+            <h2>Translated Audio:</h2>
+            <audio controls>
+                <source src="{{ translated_audio_path }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio><br><br>
+            <form action="/download_translated_audio" method="post">
+                <input type="hidden" name="translated_audio_path" value="{{ translated_audio_path }}">
+                <button type="submit">Download Translated Audio</button>
+            </form>
+        {% endif %}
+
+        {% if translated_summary_path %}
+            <h2>Translated Summary:</h2>
+            <a href="{{ translated_summary_path }}" download>Download Translated Summary PDF</a><br><br>
+        {% endif %}
+
+        {% if summarized_audio_path %}
+            <h2>Summarized Audio:</h2>
+            <audio controls>
+                <source src="{{ summarized_audio_path }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio><br><br>
+            <form action="/download_summarized_audio" method="post">
+                <input type="hidden" name="summarized_audio_path" value="{{ summarized_audio_path }}">
+                <button type="submit">Download Summarized Audio</button>
+            </form>
+        {% endif %}
+    </div>
+
+    <script>
+        // JavaScript code can be added here for additional functionality
+    </script>
+</body>
+</html>
