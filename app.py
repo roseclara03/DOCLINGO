@@ -153,46 +153,38 @@ def index():
                 return render_template('index.html', languages=languages, translated_summary_path=summary_pdf_path, summarized_audio_path=summary_audio_path)
 
     return render_template('index.html', languages=languages)
-
 @app.route('/download_summary', methods=['POST'])
 def download_translated_summary():
     if request.method == 'POST':
-        translated_summary_path = request.form['translated_summary_path']
-        
+        translated_summary_path = request.form.get('translated_summary_path')
         if translated_summary_path:
             return send_file(translated_summary_path, as_attachment=True)
-
     return "Error: Translated summary could not be downloaded."
 
 @app.route('/download_translated_pdf', methods=['POST'])
 def download_translated_pdf():
     if request.method == 'POST':
-        translated_pdf_path = request.form['translated_pdf_path']
-        
+        translated_pdf_path = request.form.get('translated_pdf_path')
         if translated_pdf_path:
             return send_file(translated_pdf_path, as_attachment=True)
-
     return "Error: Translated PDF could not be downloaded."
 
 @app.route('/download_translated_audio', methods=['POST'])
 def download_translated_audio():
     if request.method == 'POST':
-        translated_audio_path = request.form['translated_audio_path']
-        
+        translated_audio_path = request.form.get('translated_audio_path')
         if translated_audio_path:
             return send_file(translated_audio_path, as_attachment=True)
-
     return "Error: Translated audio could not be downloaded."
 
 @app.route('/download_summarized_audio', methods=['POST'])
 def download_summarized_audio():
     if request.method == 'POST':
-        summarized_audio_path = request.form['summarized_audio_path']
-        
+        summarized_audio_path = request.form.get('summarized_audio_path')
         if summarized_audio_path:
             return send_file(summarized_audio_path, as_attachment=True)
-
     return "Error: Summarized audio could not be downloaded."
 
-if __name__== '__main__':
+
+if __name__ == '__main__':
     app.run(debug=True)
