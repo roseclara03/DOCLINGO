@@ -67,87 +67,78 @@
 
         .result-section h2 {
             color: #333;
-            margin-bottom: 20px;
         }
 
-        a {
-            color: #333;
+        .result-section a {
+            display: block;
+            margin-bottom: 10px;
+            color: #007bff;
             text-decoration: none;
-            font-weight: bold;
         }
 
-        a:hover {
+        .result-section a:hover {
             text-decoration: underline;
-        }
-
-        audio {
-            width: 100%;
-            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>DocLingo</h1>
-    <form action="/" method="post" enctype="multipart/form-data">
+    <h1>PDF Translator</h1>
+    <form method="POST" enctype="multipart/form-data">
         <label for="source_language">Source Language:</label>
-        <select name="source_language" id="source_language">
+        <select id="source_language" name="source_language" required>
             {% for code, name in languages.items() %}
                 <option value="{{ code }}">{{ name }}</option>
             {% endfor %}
-        </select><br><br>
+        </select>
 
         <label for="target_language">Target Language:</label>
-        <select name="target_language" id="target_language">
+        <select id="target_language" name="target_language" required>
             {% for code, name in languages.items() %}
                 <option value="{{ code }}">{{ name }}</option>
             {% endfor %}
-        </select><br><br>
+        </select>
 
         <label for="input_pdf">Upload PDF:</label>
-        <input type="file" name="input_pdf" id="input_pdf" accept=".pdf"><br><br>
+        <input type="file" id="input_pdf" name="input_pdf" accept="application/pdf" required>
 
         <button type="submit" name="submit_translated_pdf">Translate PDF</button>
-        <button type="submit" name="submit_translated_summary">Translate and Summarize</button>
+        <button type="submit" name="submit_translated_summary">Translate and Summarize PDF</button>
     </form>
 
-    <div class="result-section">
-        {% if translated_pdf_path %}
+    {% if translated_pdf_path %}
+        <div class="result-section">
             <h2>Translated PDF:</h2>
-            <a href="{{ translated_pdf_path }}" download>Download Translated PDF</a><br><br>
-        {% endif %}
-
-        {% if translated_audio_path %}
-            <h2>Translated Audio:</h2>
-            <audio controls>
-                <source src="{{ translated_audio_path }}" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio><br><br>
-            <form action="/download_translated_audio" method="post">
+            <form method="POST" action="{{ url_for('download_translated_pdf') }}">
+                <input type="hidden" name="translated_pdf_path" value="{{ translated_pdf_path }}">
+                <button type="submit">Download Translated PDF</button>
+            </form>
+            <form method="POST" action="{{ url_for('download_translated_audio') }}">
+                <audio controls>
+                    <source src="{{ translated_audio_path }}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio><br><br>
                 <input type="hidden" name="translated_audio_path" value="{{ translated_audio_path }}">
                 <button type="submit">Download Translated Audio</button>
             </form>
-        {% endif %}
+        </div>
+    {% endif %}
 
-        {% if translated_summary_path %}
+    {% if translated_summary_path %}
+        <div class="result-section">
             <h2>Translated Summary:</h2>
-            <a href="{{ translated_summary_path }}" download>Download Translated Summary PDF</a><br><br>
-        {% endif %}
-
-        {% if summarized_audio_path %}
-            <h2>Summarized Audio:</h2>
-            <audio controls>
-                <source src="{{ summarized_audio_path }}" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio><br><br>
-            <form action="/download_summarized_audio" method="post">
+            <form method="POST" action="{{ url_for('download_translated_summary') }}">
+                <input type="hidden" name="translated_summary_path" value="{{ translated_summary_path }}">
+                <button type="submit">Download Translated Summary</button>
+            </form>
+            <form method="POST" action="{{ url_for('download_summarized_audio') }}">
+                <audio controls>
+                    <source src="{{ summarized_audio_path }}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio><br><br>
                 <input type="hidden" name="summarized_audio_path" value="{{ summarized_audio_path }}">
                 <button type="submit">Download Summarized Audio</button>
             </form>
-        {% endif %}
-    </div>
-
-    <script>
-        // JavaScript code can be added here for additional functionality
-    </script>
+        </div>
+    {% endif %}
 </body>
 </html>
